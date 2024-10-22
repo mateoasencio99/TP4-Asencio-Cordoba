@@ -1,20 +1,27 @@
-// database.js
 const { Sequelize } = require('sequelize');
 
-// Crear una instancia de Sequelize para SQLite
 const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: 'database.sqlite' // Ruta al archivo de la base de datos SQLite
+	dialect: 'sqlite',
+	storage: 'db.sqlite',
+	logQueryParameters: true,
+	benchmark: true
 });
 
-// Probar la conexión a la base de datos
-const connectDB = async () => {
-    try {
-        await sequelize.authenticate();
-        console.log('Conexión a la base de datos establecida con éxito.');
-    } catch (error) {
-        console.error('No se pudo conectar a la base de datos:', error);
-    }
-};
+const modelDefiners = [
+	// require('./models/category.model'),
+	// require('./models/item.model'),
+	// require('./models/order.model'),
+	// Add more models here...
+	// require('./models/item'),
+];
 
-module.exports = { sequelize, connectDB };
+// We define all models according to their files.
+// for (const modelDefiner of modelDefiners) {
+// 	modelDefiner(sequelize);
+// }
+
+// We execute any extra setup after the models are defined, such as adding associations.
+// applyExtraSetup(sequelize);
+
+// We export the sequelize connection instance to be used around our app.
+module.exports = sequelize;

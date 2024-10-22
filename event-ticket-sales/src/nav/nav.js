@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const Header = () => {
+const Nav = () => {
   const [nombre, setNombre] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -9,12 +9,12 @@ const Header = () => {
   useEffect(() => {
     const fetchNombre = async () => {
       try {
-        const response = await fetch('https://localhost:3000/nombre');
+        const response = await fetch('http://localhost:3001/configurations');
         if (!response.ok) {
           throw new Error('Error al obtener el nombre');
         }
         const data = await response.json();
-        setNombre(data.nombre); // Asumiendo que el nombre viene en un objeto con la propiedad 'nombre'
+        setNombre(data.nombre); // Asegúrate que 'nombre' esté en la respuesta
       } catch (error) {
         setError(error.message);
       } finally {
@@ -24,21 +24,20 @@ const Header = () => {
 
     fetchNombre();
   }, []);
+
   return (
-    <header style={headerStyle}>
+    <header>
       <h1>Mi Aplicación</h1>
+      {loading && <p>Cargando...</p>}
+      {error && <p>Error: {error}</p>}
       <nav>
-        <ul style={navStyle}>
-          <li><Link to="/">Inicio</Link></li>
-          <li><Link to="/about"></Link></li>
-          <li><Link to="/contact">Mis Compras</Link></li>
+        <ul>
+          
         </ul>
       </nav>
+      {nombre && <p>Hola, {nombre}!</p>} {/* Muestra el nombre si está disponible */}
     </header>
   );
 };
 
-
 export default Nav;
-
-
