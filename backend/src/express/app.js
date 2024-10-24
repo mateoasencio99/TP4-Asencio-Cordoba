@@ -1,67 +1,62 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors'); // Importa cors
 
 const routes = {
-	configurations: require('./routes/configurations'),
+    configurations: require('./routes/configurations'),
 };
 
 const app = express();
 
+// Usa CORS para permitir todas las rutas
+app.use(cors()); // Si solo deseas permitir un origen específico, usa: cors({ origin: 'http://localhost:3000' })
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// We create a wrapper to workaround async errors not being transmitted correctly.
+// Función para manejar errores asíncronos
 function makeHandlerAwareOfAsyncErrors(handler) {
-	return async function(req, res, next) {
-		try {
-			await handler(req, res);
-		} catch (error) {
-			next(error);
-		}
-	};
+    return async function(req, res, next) {
+        try {
+            await handler(req, res);
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 
-// We define the standard REST APIs for each route (if they exist).
+// Definición de las rutas de la API
 for (const [routeName, routeController] of Object.entries(routes)) {
-	if (routeController.getAll) {
-		app.get(
-			`/api/${routeName}`,
-			makeHandlerAwareOfAsyncErrors(routeController.getAll)
-		);
-	}
-	if (routeController.getById) {
-		app.get(
-			`/api/${routeName}/:id`,
-			makeHandlerAwareOfAsyncErrors(routeController.getById)
-		);
-	}
-	if (routeController.create) {
-		app.post(
-			`/api/${routeName}`,
-			makeHandlerAwareOfAsyncErrors(routeController.create)
-		);
-	}
-	if (routeController.update) {
-		app.put(
-			`/api/${routeName}/:id`,
-			makeHandlerAwareOfAsyncErrors(routeController.update)
-		);
-	}
-	if (routeController.remove) {
-		app.delete(
-			`/api/${routeName}/:id`,
-			makeHandlerAwareOfAsyncErrors(routeController.remove)
-		);
-	}
+    if (routeController.getAll) {
+        app.get(
+            `/api/${routeName}`,
+            makeHandlerAwareOfAsyncErrors(routeController.getAll)
+        );
+    }
+    if (routeController.getById) {
+        app.get(
+            `/api/${routeName}/:id`,
+            makeHandlerAwareOfAsyncErrors(routeController.getById)
+        );
+    }
+    if (routeController.create) {
+        app.post(
+            `/api/${routeName}`,
+            makeHandlerAwareOfAsyncErrors(routeController.create)
+        );
+    }
+    if (routeController.update) {
+        app.put(
+            `/api/${routeName}/:id`,
+            makeHandlerAwareOfAsyncErrors(routeController.update)
+        );
+    }
+    if (routeController.remove) {
+        app.delete(
+            `/api/${routeName}/:id`,
+            makeHandlerAwareOfAsyncErrors(routeController.remove)
+        );
+    }
 }
-
-// app.get(`/api/orders/:id/items`,
-// 	makeHandlerAwareOfAsyncErrors(routes.orders.listItems)
-// );
-
-// app.post(`/api/orders/:id/items`,
-// 	makeHandlerAwareOfAsyncErrors(routes.orders.addItem)
-// );
-
 
 module.exports = app;
