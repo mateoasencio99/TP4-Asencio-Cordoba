@@ -1,10 +1,23 @@
 function applyExtraSetup(sequelize) {
-	const { configurations } = sequelize.models;
+	const { category, country, event, location, person, province, ticket, user  } = sequelize.models;
 
-	// item.belongsTo(category);
-	// category.hasMany(item);
-    // item.belongsToMany(order, { through: 'order_item' });
-    // order.belongsToMany(item, { through: 'order_item' });
+	user.belongsTo(person);
+	person.hasOne(user);
+
+	ticket.belongsTo(person);
+	person.hasMany(ticket);
+
+	event.belongsTo(category);
+	category.hasMany(event);
+
+	event.belongsTo(location);
+	location.hasMany(event);
+
+	location.belongsTo(province);
+	province.hasMany(location);
+
+	province.belongsTo(country);
+	country.hasMany(province);
 }
 
 module.exports = { applyExtraSetup };

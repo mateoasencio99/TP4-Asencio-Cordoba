@@ -4,7 +4,7 @@ const { getIdParam } = require('../helpers');
 async function getAll(req, res) {
 	const configurations = await models.configurations.findAll();
 	const data = {
-		nombre: configurations.find(config => config.key === 1).value
+		nombre: configurations.find(config => config.key === 1)?.value ?? '',
 	}
 	res.status(200).json(data);
 };
