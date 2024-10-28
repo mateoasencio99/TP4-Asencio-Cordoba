@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"; // Importa Link
 import Carousel from "../carousel/carousel";
 
 const Principal = () => {
@@ -9,9 +10,8 @@ const Principal = () => {
         <Carousel />
       </div>{/* Fin de la seccion del Carousel*/}
 
-
       <div className="container">
-        <h2 className="text-center">Proximos Eventos</h2>
+        <h2 className="text-center">Próximos Eventos</h2>
 
         <div className="row">
           <div className="col-md-4">
@@ -20,7 +20,7 @@ const Principal = () => {
               className="d-block w-100"
               alt="Imagen Evento"
             />
-            <a href="#detalles">Q'Lokura- 24 de Octubre</a>
+            <Link to={`/detalles/1`}>Q'Lokura - 24 de Octubre</Link>
             <p>$9000</p>
           </div>
 
@@ -30,7 +30,7 @@ const Principal = () => {
               className="d-block w-100"
               alt="Imagen Evento"
             />
-            <a href="#detalles">Q'Lokura- 24 de Octubre</a>
+            <Link to={`/detalles/2`}>Q'Lokura - 25 de Octubre</Link>
             <p>$9000</p>
           </div>
 
@@ -40,13 +40,11 @@ const Principal = () => {
               className="d-block w-100"
               alt="Imagen Evento"
             />
-            <a href="#detalles">Q'Lokura- 24 de Octubre</a>
+            <Link to={`/detalles/3`}>Q'Lokura - 26 de Octubre</Link>
             <p>$9000</p>
           </div>
         </div>
-      </div>  {/* Fin de la seccion de los Proximos Eventos*/}
-
-
+      </div>{/* Fin de la seccion de los Proximos Eventos*/}
 
       <div className="container">
         <h2 className="text-center">Sobre Nosotros</h2>
