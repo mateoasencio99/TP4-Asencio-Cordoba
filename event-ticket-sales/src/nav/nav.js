@@ -10,7 +10,7 @@ const Nav = () => {
           <Link to="/eventos">Eventos</Link> {/* Cambiado a Link */}
           <Link to="/mis-compras">Mis Compras</Link> {/* Cambia según la ruta que necesites */}
         </div>
-        <Link to="/ingresar">Ingresar/Registrarse</Link> {/* Cambia según la ruta que necesites */}
+        <Link to="/login">Ingresar/Registrarse</Link> {/* Cambiado a /login */}
       </nav>
     </div>
   );

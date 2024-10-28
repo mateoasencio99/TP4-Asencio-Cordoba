@@ -11,7 +11,6 @@ const eventos = [
 const Eventos = () => {
     return (
         <div>
-            <h1>Eventos</h1>
             <div className="container">
                 <h2 className="text-center py-5">Eventos</h2>
                 <div className="row">

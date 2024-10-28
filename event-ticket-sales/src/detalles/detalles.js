@@ -20,40 +20,33 @@ const Detalles = () => {
   }
 
   const { title, price, description, pictures } = producto;
-  const characterLimit = 100;
 
   return (
     <div className="container mt-4 py-5">
-      <div className="bg-light p-4 rounded d-flex flex-column flex-md-row">
-        <div className="col-md-4 mb-4 mb-md-0">
+      <div className="row bg-light p-4 rounded align-items-center">
+        <div className="col-md-6 d-flex justify-content-center">
           <img
-            className="producto-imagen img-fluid max-height-400"
+            className="producto-imagen img-fluid max-height-400 mb-4"
             src={pictures[0].url}
             alt={title}
           />
         </div>
-        <div className="col-md-8 ms-md-4">
+        
+        <div className="col-md-6">
           <h2 className="text-center mb-4">{title}</h2>
-          <div className="detalles mb-4">
-            <p className="h5">Precio: ${price}</p>
-            <p>
-              Descripción:{" "}
-              {description.length > characterLimit ? description.slice(0, characterLimit) + "..." : description}
-            </p>
-          </div>
-
-          <div className="d-flex justify-content-end me-5">
-            <button className="btn btn-secondary text-end" onClick={() => navigate(-1)}>
-              Finalizar Compra
-            </button>
-          </div>
-          
+          <p className="h5 text-center">Precio: ${price}</p>
+          <p className="text-center">{description}</p>
         </div>
       </div>
-
-      <button className="btn btn-secondary" onClick={() => navigate(-1)}>
-        Volver
-      </button>
+      
+      <div className="d-flex justify-content-center mt-3">
+        <button className="btn btn-secondary me-3" onClick={() => navigate(`/comprar/${id}`)}>
+          Comprar
+        </button>
+        <button className="btn btn-secondary" onClick={() => navigate(-1)}>
+          Volver
+        </button>
+      </div>
     </div>
   );
 };

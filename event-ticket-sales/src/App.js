@@ -6,7 +6,10 @@ import Nav from "./nav/nav";
 import Principal from "./principal/principal";
 import Footer from "./footer/footer";
 import Eventos from "./evento/evento";
-import Detalles from "./detalles/detalles"; // Importa el componente Detalles
+import Detalles from "./detalles/detalles"; 
+import Comprar from "./comprar/comprar"; 
+import Login from "./login/login";
+import Register from "./register/register"; 
 
 function App() {
   return (
@@ -15,8 +18,11 @@ function App() {
         <Nav />
         <Routes>
           <Route path="/" element={<Principal />} />
-          <Route path="/eventos" element={<Eventos />} /> {/* Ruta para la vista de Eventos */}
-          <Route path="/detalles/:id" element={<Detalles />} /> {/* Ruta para los detalles del evento */}
+          <Route path="/eventos" element={<Eventos />} />
+          <Route path="/detalles/:id" element={<Detalles />} />
+          <Route path="/comprar/:id" element={<Comprar />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/registro" element={<Register />} /> {/* Asegúrate de usar este componente */}
         </Routes>
         <Footer />
       </div>
