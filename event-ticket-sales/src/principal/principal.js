@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import Carousel from "../carousel/carousel";
+import './principal.css';
 
 const Principal = () => {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/upcomingEvents'); 
+        if (!response.ok) {
+          throw new Error('Error al obtener los eventos');
+        }
+        const data = await response.json();
+        setEvents(data); 
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []); 
+
   return (
     <div>
       <div className="container">
@@ -14,35 +34,17 @@ const Principal = () => {
         <h2 className="text-center">Proximos Eventos</h2>
 
         <div className="row">
-          <div className="col-md-4">
-            <img
-              src={require("../img/1.jpg")}
-              className="d-block w-100"
-              alt="Imagen Evento"
-            />
-            <a href="#detalles">Q'Lokura- 24 de Octubre</a>
-            <p>$9000</p>
-          </div>
-
-          <div className="col-md-4">
-            <img
-              src={require("../img/2.jpg")}
-              className="d-block w-100"
-              alt="Imagen Evento"
-            />
-            <a href="#detalles">Q'Lokura- 24 de Octubre</a>
-            <p>$9000</p>
-          </div>
-
-          <div className="col-md-4">
-            <img
-              src={require("../img/1.jpg")}
-              className="d-block w-100"
-              alt="Imagen Evento"
-            />
-            <a href="#detalles">Q'Lokura- 24 de Octubre</a>
-            <p>$9000</p>
-          </div>
+        {events.map(event => (
+        <div className="col-md-4">
+          <img
+            src={require(`../img/events/${event.id}.jpg`)}
+            className="card-img"
+            alt="Imagen Evento"
+          />
+          <p><a href="#detalles">{`${event.name} - ${new Date(event.date).toLocaleDateString()}`}</a></p>
+          <p>{`$${event.price}`}</p>
+        </div>
+      ))}
         </div>
       </div>  {/* Fin de la seccion de los Proximos Eventos*/}
 
