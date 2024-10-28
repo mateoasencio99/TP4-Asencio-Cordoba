@@ -4,6 +4,11 @@ const cors = require('cors'); // Importa cors
 
 const routes = {
     configurations: require('./routes/configurations'),
+    events: require('./routes/event'),
+    countries: require('./routes/country'),
+    provinces: require('./routes/province'),
+    locations: require('./routes/location'),
+    categories: require('./routes/category'),
 };
 
 const app = express();
@@ -58,5 +63,9 @@ for (const [routeName, routeController] of Object.entries(routes)) {
         );
     }
 }
+
+app.get(`/api/upcomingEvents`,
+	makeHandlerAwareOfAsyncErrors(routes.events.upcomingEvents)
+);
 
 module.exports = app;
