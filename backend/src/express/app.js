@@ -58,15 +58,11 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// Middleware de autenticación
-app.use(authenticateToken);
-
 // Definición de las rutas de la API
 for (const [routeName, routeController] of Object.entries(routes)) {
     if (routeController.getAll) {
         app.get(
             `/api/${routeName}`,
-            authenticateToken,
             makeHandlerAwareOfAsyncErrors(routeController.getAll)
         );
     }
