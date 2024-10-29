@@ -3,7 +3,7 @@ const { models } = require('../../sequelize');
 const { getIdParam } = require('../helpers');
 
 async function getAll(req, res) {
-	const events = await models.event.findAll();
+	const events = await models.event.findAll({order: [['date', 'DESC']]});
 	res.status(200).json(events);
 };
 
