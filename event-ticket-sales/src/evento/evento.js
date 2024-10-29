@@ -47,7 +47,7 @@ const Eventos = () => {
         <div className="row">
             {eventos.map(evento => (
                 <div className="col-md-4 mb-4" key={evento.id}>
-                    <div className="card h-100 shadow">
+                    <div className="card h-100 shadow bc bs">
                         <img
                             src={require(`../img/events/${evento.id}.jpg`)}
                             className="card-img-top event-image"
@@ -57,7 +57,7 @@ const Eventos = () => {
                             <h5 className="card-title">{evento.name}</h5>
                             <p className="card-text">${evento.price}</p>
                             <p className="card-text">{formatFecha(evento.date)}</p>
-                            <Link to={`/detalles/${evento.id}`} className="btn btn-primary">
+                            <Link to={`/detalles/${evento.id}`} className="btn btn-dark fs-6 fw-bold boton">
                                 Ver detalles
                             </Link>
                         </div>
