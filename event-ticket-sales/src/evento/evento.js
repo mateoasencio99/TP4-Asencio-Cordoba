@@ -11,7 +11,14 @@ const Eventos = () => {
     
     const fetchEventos = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/events');
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:8080/api/events', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Incluye el token en el encabezado de autorización
+                    'Content-Type': 'application/json'
+                }
+            });
             if (!response.ok) {
                 throw new Error('Error al obtener las imágenes');
             }

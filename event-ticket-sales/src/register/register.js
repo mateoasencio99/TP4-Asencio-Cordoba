@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Para navegación
+import { Link, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Register = () => {
@@ -8,11 +8,41 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí podrías manejar la lógica de registro, como la validación de credenciales.
-    console.log("Registro con:", { firstName, lastName, email, password, confirmPassword });
+    setError("");  // Reseteamos error
+
+    // Verificación de contraseñas
+    if (password !== confirmPassword) {
+      setError("Las contraseñas no coinciden");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ firstName, lastName, email, password })
+      });
+
+      if (response.ok) {
+        setSuccess("Registro exitoso, redirigiendo...");
+        setTimeout(() => {
+          navigate("/login"); // Redirige a login después de 2 segundos
+        }, 2000);
+      } else {
+        const data = await response.json();
+        setError(data.message || "Error al registrar");
+      }
+    } catch (error) {
+      setError("Error de conexión. Inténtalo de nuevo más tarde.");
+    }
   };
 
   return (
@@ -21,13 +51,15 @@ const Register = () => {
         <div className="col-md-6 d-flex justify-content-center">
           <img
             className="img-fluid max-height-400 mb-4"
-            src={require("../img/1.jpg")} // Cambia la imagen según necesites.
+            src={require("../img/1.jpg")}
             alt="Registro"
           />
         </div>
 
         <div className="col-md-6">
           <h2 className="text-center mb-4">Registro de Usuario</h2>
+          {error && <div className="alert alert-danger">{error}</div>}
+          {success && <div className="alert alert-success">{success}</div>}
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="firstName" className="form-label">Nombre</label>

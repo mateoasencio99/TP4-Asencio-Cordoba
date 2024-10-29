@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import Nav from "./nav/nav";
@@ -22,7 +22,10 @@ function App() {
           <Route path="/detalles/:id" element={<Detalles />} />
           <Route path="/comprar/:id" element={<Comprar />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/registro" element={<Register />} /> {/* Asegúrate de usar este componente */}
+          <Route path="/registro" element={<Register />} />
+          
+          {/* Ruta para redirigir a la página principal si no se encuentra la ruta */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Footer />
       </div>
