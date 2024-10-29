@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Carousel from "../carousel/carousel";
 import './principal.css';
+import { Link } from "react-router-dom";
 
 const Principal = () => {
   const [events, setEvents] = useState([]);
@@ -22,36 +23,45 @@ const Principal = () => {
     fetchEvents();
   }, []); 
 
+  const formatFecha = (fecha) => {
+      const opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
+      return new Date(fecha).toLocaleDateString('es-ES', opciones).replace(/\//g, '/'); // Cambia las barras si es necesario
+  };
+
   return (
     <div>
       <div className="container">
-        <h2 className="text-center">Anuncios</h2>
+        <h2 className="text-center my-5">ANUNCIOS</h2>
         <Carousel />
-      </div>{/* Fin de la seccion del Carousel*/}
-
-
+      </div>
+      <hr></hr>
       <div className="container">
-        <h2 className="text-center">Proximos Eventos</h2>
-
+        <h2 className="text-center mb-5">PRÓXIMOS EVENTOS</h2>
         <div className="row">
         {events.map(event => (
-        <div className="col-md-4">
-          <img
-            src={require(`../img/events/${event.id}.jpg`)}
-            className="card-img"
-            alt="Imagen Evento"
-          />
-          <p><a href="#detalles">{`${event.name} - ${new Date(event.date).toLocaleDateString()}`}</a></p>
-          <p>{`$${event.price}`}</p>
+          <div className="col-md-4 mb-4">
+            <div className="card h-100 shadow">
+                <img
+                    src={require(`../img/events/${event.id}.jpg`)}
+                    className="card-img-top event-image"
+                    alt={`Imagen de ${event.name}`}
+                />
+                <div className="card-body text-center">
+                    <h5 className="card-title">{event.name}</h5>
+                    <p className="card-text">${event.price}</p>
+                    <p className="card-text">{formatFecha(event.date)}</p>
+                    {/* <Link to={`/detalles/${event.id}`} className="btn btn-primary">
+                        Ver detalles
+                    </Link> */}
+                </div>
+            </div>
         </div>
-      ))}
+        ))}
         </div>
-      </div>  {/* Fin de la seccion de los Proximos Eventos*/}
-
-
-
-      <div className="container">
-        <h2 className="text-center">Sobre Nosotros</h2>
+      </div> 
+      <hr></hr>
+      <div className="container mb-80">
+        <h2 className="text-center mb-5">SOBRE NOSOTROS</h2>
         <div className="row">
           <div className="col-md-6">
             <img
@@ -77,7 +87,7 @@ const Principal = () => {
             </p>
           </div>
         </div>
-      </div>{/* Fin de la seccion sobre nosotros*/}
+      </div>
     </div>
   );
 };
