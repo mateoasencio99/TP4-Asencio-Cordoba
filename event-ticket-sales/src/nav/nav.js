@@ -12,29 +12,29 @@ const Nav = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-light bg-dark">
       <div className="container">
-        <Link className="navbar-brand" to="/">Inicio</Link>
+        <Link className="navbar-brand text-white fs-4 fw-bold" to="/">Inicio</Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto">
+          <ul className="navbar-nav ms-auto ">
             <li className="nav-item">
-              <Link className="nav-link" to="/eventos">Eventos</Link>
+              <Link className="nav-link text-white" to="/eventos">Eventos</Link>
             </li>
             {token && (
               <li className="nav-item">
-                <Link className="nav-link" to="/mis-compras">Mis Compras</Link>
+                <Link className="nav-link text-white" to="/mis-compras">Mis Compras</Link>
               </li>
             )}
             {token ? (
               <li className="nav-item">
-                <button className="nav-link btn btn-link" onClick={logout}>Logout</button>
+                <button className="nav-link btn btn-link text-white" onClick={logout}>Logout</button>
               </li>
             ) : (
               <li className="nav-item">
-                <Link className="nav-link" to="/login">Ingresar/Registrarse</Link>
+                <Link className="nav-link text-white" to="/login">Ingresar/Registrarse</Link>
               </li>
             )}
           </ul>
