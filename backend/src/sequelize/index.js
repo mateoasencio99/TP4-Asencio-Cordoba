@@ -12,7 +12,15 @@ const sequelize = new Sequelize({
 });
 
 const modelDefiners = [
+	require('./models/category.model'),
 	require('./models/configurations.model'),
+	require('./models/country.model'),
+	require('./models/event.model'),
+	require('./models/location.model'),
+	require('./models/person.model'),
+	require('./models/province.model'),
+	require('./models/ticket.model'),
+	require('./models/user.model'),
 ];
 
 // We define all models according to their files.

@@ -1,12 +1,10 @@
+const { Op } = require('sequelize');
 const { models } = require('../../sequelize');
 const { getIdParam } = require('../helpers');
 
 async function getAll(req, res) {
-	const configurations = await models.configurations.findAll();
-	const data = {
-		nombre: configurations.find(config => config.key === 1)?.value ?? '',
-	}
-	res.status(200).json(data);
+	const events = await models.event.findAll();
+	res.status(200).json(events);
 };
 
 async function getById(req, res) {
@@ -90,6 +88,18 @@ async function listItems(req, res) {
 	}
 }
 
+async function upcomingEvents(req, res) {
+	const events = await models.event.findAll({
+		where: {
+			date: {
+				[Op.gt]: new Date() 
+			}
+		},
+		order: [['date', 'ASC']] 
+	});
+	res.status(200).json(events);
+};
+
 module.exports = {
 	getAll,
 	// getById,
@@ -97,5 +107,6 @@ module.exports = {
 	// update,
 	// remove,
 	// addItem,
-	// listItems
+	// listItems,
+	upcomingEvents
 };
