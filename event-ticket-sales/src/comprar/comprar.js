@@ -107,7 +107,7 @@ const Comprar = () => {
         </div>
       </div>
 
-      <button className="btn btn-secondary mt-3" onClick={() => navigate(-1)}>
+      <button className="btn btn-secondary my-3" onClick={() => navigate(-1)}>
         Volver
       </button>
     </div>
