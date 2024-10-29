@@ -23,7 +23,6 @@ function App() {
           <Route path="/comprar/:id" element={<Comprar />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registro" element={<Register />} />
-          
           {/* Ruta para redirigir a la página principal si no se encuentra la ruta */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

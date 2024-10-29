@@ -2,14 +2,30 @@ import React, { useState, useEffect } from "react";
 import "./carousel.css";
 
 const Carousel = () => {
-    console.log("Carousel se está renderizando");
-    const images = [
-        require('../img/1.jpg'),
-        require('../img/2.jpg'),
-    ];
-
+    const [images, setImages] = useState([]); 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [animationClass, setAnimationClass] = useState("slide-in");
+    
+
+    // Función para obtener las imágenes desde la API
+    const fetchImages = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/upcomingEvents'); 
+            if (!response.ok) {
+                throw new Error('Error al obtener las imágenes');
+            }
+            const data = await response.json();
+            console.log(data);
+            const imageUrls = data.map(event => require(`../img/events/${event.id}.jpg`));
+            setImages(imageUrls); 
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchImages();
+    }, []);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
