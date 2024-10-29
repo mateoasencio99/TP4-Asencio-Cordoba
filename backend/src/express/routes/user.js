@@ -1,31 +1,46 @@
-const { Op } = require('sequelize');
 const { models } = require('../../sequelize');
 const { getIdParam } = require('../helpers');
+const bcrypt = require('bcryptjs');
 
 async function getAll(req, res) {
-	const userId = req.userId; 
-	console.log(userId);
-	const events = await models.event.findAll({order: [['date', 'DESC']]});
-	res.status(200).json(events);
+	const categories = await models.category.findAll();
+	res.status(200).json(categories);
 };
 
-async function getById(req, res) {
-	const id = getIdParam(req);
-	const order = await models.order.findByPk(id);
-	if (order) {
-		res.status(200).json(order);
-	} else {
-		res.status(404).send('404 - Not found');
-	}
+async function getByUserNameAndPassword(req, res) {
+	const userName = req.body.email;
+    const password = req.body.password; // Contraseña sin hash del cuerpo de la solicitud
+
+    // Buscar el usuario solo por el userName
+    const user = await models.user.findOne({
+        where: { userName: userName }
+    });
+
+    if (user) {
+        // Comparar la contraseña proporcionada con la almacenada en el usuario
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        
+        if (isPasswordValid) {
+            return user; // Devolver el usuario si la contraseña es válida
+        }
+    }
+
+    // Si el usuario no existe o la contraseña no coincide, devolver null
+    return null;
 };
 
 async function create(req, res) {
-	if (req.body.id) {
-		res.status(400).send(`Bad request: ID should not be provided, since it is determined automatically by the database.`)
-	} else {
-		await models.order.create(req.body);
-		res.status(201).end();
-	}
+    const userName = req.body.email;
+    const password = await bcrypt.hash(req.body.password, 10);
+    const isAdmin = false;
+    try {
+        // Aquí se crea el usuario en la base de datos
+        await models.user.create({ userName, password, isAdmin });
+        res.status(201).json({ message: 'User created successfully' });
+    } catch (error) {
+        console.error("Create User Error:", error.message);
+        throw error; // Lanza el error para que el manejador de errores lo capture
+    }
 };
 
 async function update(req, res) {
@@ -90,25 +105,12 @@ async function listItems(req, res) {
 	}
 }
 
-async function upcomingEvents(req, res) {
-	const events = await models.event.findAll({
-		where: {
-			date: {
-				[Op.gt]: new Date() 
-			}
-		},
-		order: [['date', 'ASC']] 
-	});
-	res.status(200).json(events);
-};
-
 module.exports = {
 	getAll,
-	// getById,
-	// create,
+	getByUserNameAndPassword,
+	create,
 	// update,
 	// remove,
 	// addItem,
-	// listItems,
-	upcomingEvents
+	// listItems
 };
