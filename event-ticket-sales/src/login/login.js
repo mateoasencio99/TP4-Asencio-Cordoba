@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Importa useNavigate para redireccionar
+import { Link, useNavigate } from "react-router-dom"; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./login.css";
 
@@ -7,6 +7,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(""); // Estado para el manejo de errores
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate(); // Hook de navegación para redireccionar
 
   const handleSubmit = async (e) => {
@@ -63,13 +64,25 @@ const Login = () => {
             <div className="mb-3">
               <label htmlFor="password" className="form-label">Contraseña</label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 className="form-control"
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+            </div>
+            <div className="form-check mb-3">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                id="showPassword" // ID para el checkbox
+                checked={showPassword} // Estado del checkbox según showPassword
+                onChange={() => setShowPassword(!showPassword)} // Alterna el estado al cambiar
+              />
+              <label className="form-check-label" htmlFor="showPassword">
+                Mostrar Contraseña {/* Texto para indicar la función del checkbox */}
+              </label>
             </div>
             <button type="submit" className="btn btn-primary w-100">
               Iniciar Sesión
