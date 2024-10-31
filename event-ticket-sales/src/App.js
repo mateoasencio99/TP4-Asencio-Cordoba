@@ -10,6 +10,7 @@ import Detalles from "./detalles/detalles";
 import Comprar from "./comprar/comprar"; 
 import Login from "./login/login";
 import Register from "./register/register"; 
+import MisCompras from "./misCompras/misCompras";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/registro" element={<Register />} />
           {/* Ruta para redirigir a la página principal si no se encuentra la ruta */}
           <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/mis-compras" element={<MisCompras />} />
         </Routes>
         <Footer />
       </div>

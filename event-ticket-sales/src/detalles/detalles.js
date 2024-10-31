@@ -13,7 +13,7 @@ const Detalles = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  const producto = productos.find(prod => prod.id === parseInt(id));
+  const producto = productos.find(prod => prod.id === parseInt(id)); 
 
   if (!producto) {
     return <p>No se encontró el producto.</p>;
