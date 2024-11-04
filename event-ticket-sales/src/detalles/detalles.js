@@ -53,7 +53,7 @@ const Detalles = () => {
         </div>
       </div>
       
-      <div className="d-flex justify-content-center mt-3">
+      <div className="d-flex justify-content-center my-3 ">
         <button className="btn btn-secondary me-3" onClick={() => navigate(`/comprar/${id}`)}>
           Comprar
         </button>
