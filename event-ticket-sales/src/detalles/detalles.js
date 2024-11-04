@@ -1,25 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./detalles.css";
-
-const productos = [
-  { id: 1, title: "Q'Lokura - 24 de Octubre", price: 9000, description: "Descripción del evento Q'Lokura.", pictures: [{ url: require("../img/1.jpg") }] },
-  { id: 2, title: "Q'Lokura - 25 de Octubre", price: 9000, description: "Descripción del evento Q'Lokura.", pictures: [{ url: require("../img/2.jpg") }] },
-  { id: 3, title: "Q'Lokura - 26 de Octubre", price: 9000, description: "Descripción del evento Q'Lokura.", pictures: [{ url: require("../img/1.jpg") }] },
-];
 
 const Detalles = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  const producto = productos.find(prod => prod.id === parseInt(id));
+  const [event, setEvent] = useState([]);
+    
+    const fetchEvento = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/events/${id}`);
+            if (!response.ok) {
+                throw new Error('Error al obtener las imágenes');
+            }
+            const data = await response.json();
+            console.log(data)
+            setEvent(data);
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+        }
+    };
+    
+    useEffect(() => {
+      fetchEvento();
+    }, []);
 
-  if (!producto) {
-    return <p>No se encontró el producto.</p>;
+
+  if (!event) {
+    return <p>No se encontró el evento.</p>;
   }
 
-  const { title, price, description, pictures } = producto;
+  const { name, price, description } = event;
 
   return (
     <div className="container mt-4 py-5">
@@ -27,13 +41,13 @@ const Detalles = () => {
         <div className="col-md-6 d-flex justify-content-center">
           <img
             className="producto-imagen img-fluid max-height-400 mb-4"
-            src={pictures[0].url}
-            alt={title}
+            src={require(`../img/events/${id}.jpg`)}
+            alt={name}
           />
         </div>
         
         <div className="col-md-6">
-          <h2 className="text-center mb-4">{title}</h2>
+          <h2 className="text-center mb-4">{name}</h2>
           <p className="h5 text-center">Precio: ${price}</p>
           <p className="text-center">{description}</p>
         </div>

@@ -4,16 +4,15 @@ const { getIdParam } = require('../helpers');
 
 async function getAll(req, res) {
 	const userId = req.userId; 
-	console.log(userId);
 	const events = await models.event.findAll({order: [['date', 'DESC']]});
 	res.status(200).json(events);
 };
 
 async function getById(req, res) {
 	const id = getIdParam(req);
-	const order = await models.order.findByPk(id);
-	if (order) {
-		res.status(200).json(order);
+	const event = await models.event.findByPk(id);
+	if (event) {
+		res.status(200).json(event);
 	} else {
 		res.status(404).send('404 - Not found');
 	}
@@ -104,7 +103,7 @@ async function upcomingEvents(req, res) {
 
 module.exports = {
 	getAll,
-	// getById,
+	getById,
 	// create,
 	// update,
 	// remove,

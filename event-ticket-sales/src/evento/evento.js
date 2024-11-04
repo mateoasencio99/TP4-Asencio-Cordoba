@@ -6,29 +6,18 @@ import { Link } from "react-router-dom";
 const Eventos = () => {
 
     const [eventos, setEventos] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     
     const fetchEventos = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/api/events', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`, // Incluye el token en el encabezado de autorización
-                    'Content-Type': 'application/json'
-                }
-            });
+            const response = await fetch('http://localhost:8080/api/events');
             if (!response.ok) {
                 throw new Error('Error al obtener las imágenes');
             }
             const data = await response.json();
             setEventos(data);
         } catch (error) {
-            setError(error.message);
             console.error('Error:', error);
         } finally {
-            setLoading(false);
         }
     };
     
@@ -43,7 +32,7 @@ const Eventos = () => {
 
     return (
         <div className="container pb-5">
-        <h2 className="text-center py-5">Eventos</h2>
+        <h2 className="text-center py-5">EVENTOS</h2>
         <div className="row">
             {eventos.map(evento => (
                 <div className="col-md-4 mb-4" key={evento.id}>
