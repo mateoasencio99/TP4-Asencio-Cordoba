@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Register = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -28,7 +26,7 @@ const Register = () => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ firstName, lastName, email, password })
+        body: JSON.stringify({ email, password })
       });
 
       if (response.ok) {
@@ -61,28 +59,6 @@ const Register = () => {
           {error && <div className="alert alert-danger">{error}</div>}
           {success && <div className="alert alert-success">{success}</div>}
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="firstName" className="form-label">Nombre</label>
-              <input
-                type="text"
-                className="form-control"
-                id="firstName"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="lastName" className="form-label">Apellido</label>
-              <input
-                type="text"
-                className="form-control"
-                id="lastName"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-              />
-            </div>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">Correo Electrónico</label>
               <input
