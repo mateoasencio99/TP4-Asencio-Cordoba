@@ -33,7 +33,7 @@ const Detalles = () => {
     return <p>No se encontró el evento.</p>;
   }
 
-  const { name, price, description } = event;
+  const { name, price, description, location } = event;
 
   return (
     <div className="container mt-4 py-5">
@@ -49,6 +49,7 @@ const Detalles = () => {
         <div className="col-md-6">
           <h2 className="text-center mb-4">{name}</h2>
           <p className="h5 text-center">Precio: ${price}</p>
+          <p className="h5 text-center">Localidad: {location?.name}</p>
           <p className="text-center">{description}</p>
         </div>
       </div>

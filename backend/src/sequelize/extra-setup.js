@@ -1,11 +1,11 @@
 function applyExtraSetup(sequelize) {
-	const { category, country, event, location, person, province, ticket, user  } = sequelize.models;
+	const { category, country, event, location, province, ticket, user  } = sequelize.models;
 
-	user.belongsTo(person);
-	person.hasOne(user);
+	ticket.belongsTo(user);
+	user.hasMany(ticket);
 
-	ticket.belongsTo(person);
-	person.hasMany(ticket);
+	ticket.belongsTo(event);
+	event.hasMany(ticket);
 
 	event.belongsTo(category);
 	category.hasMany(event);

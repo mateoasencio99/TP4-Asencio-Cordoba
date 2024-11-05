@@ -46,6 +46,7 @@ const Eventos = () => {
                             <h5 className="card-title fs-4 fw-bold text-dark">{evento.name}</h5>
                             <p className="card-text fs-5 text-success">${evento.price}</p>
                             <p className="card-text text-muted">{formatFecha(evento.date)}</p>
+                            <p className="card-text text-muted">{evento.location.name}</p>
                             <Link to={`/detalles/${evento.id}`} className="btn btn-dark fs-6 fw-bold boton">
                                 Ver detalles
                             </Link>

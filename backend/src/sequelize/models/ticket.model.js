@@ -12,20 +12,16 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        description: {
+        lastName: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        dni: {
             type: DataTypes.STRING,
             allowNull: false,
         },
         purchaseDate: {
             type: DataTypes.DATE,
-            allowNull: false,
-        },
-        maxCapacity: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        price: {
-            type: DataTypes.DECIMAL,
             allowNull: false,
         },
         state: {

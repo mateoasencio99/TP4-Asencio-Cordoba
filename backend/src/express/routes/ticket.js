@@ -1,13 +1,23 @@
 const { models } = require('../../sequelize');
 const { getIdParam } = require('../helpers');
+const { Op } = require('sequelize');
+const { TicketState } = require('../../sequelize/enums/ticketState.enum'); 
 
 async function getAll(req, res) {
-	const configurations = await models.configurations.findAll();
-	const data = {
-		name: configurations.find(config => config.key === 1)?.value ?? '',
-		description: configurations.find(config => config.key === 2)?.value ?? '',
-	}
-	res.status(200).json(data);
+	const userId = req.userId; 
+	const tickets = await models.ticket.findAll({
+		where: {
+			userId: {
+				[Op.eq]: userId
+			}
+		},
+		include: [{
+				model: models.event, // Incluye el modelo Event
+				attributes: ['name'] // Solo selecciona el atributo 'name'
+			}],
+		order: [['purchaseDate', 'DESC']] 
+	});
+	res.status(200).json(tickets);
 };
 
 async function getById(req, res) {
@@ -24,8 +34,20 @@ async function create(req, res) {
 	if (req.body.id) {
 		res.status(400).send(`Bad request: ID should not be provided, since it is determined automatically by the database.`)
 	} else {
-		await models.order.create(req.body);
-		res.status(201).end();
+        const userId = req.userId; 
+        for (const ticket of req.body.tickets) {
+            newTicket = {
+                name: ticket.nombre,
+                lastName: ticket.apellido,
+                dni: ticket.dni,
+                purchaseDate: new Date(),
+                eventId: req.body.eventId, 
+				userId: userId,
+				state: TicketState.PAID
+            }
+            await models.ticket.create(newTicket); 
+        }
+		res.status(200).json();
 	}
 };
 
@@ -94,7 +116,7 @@ async function listItems(req, res) {
 module.exports = {
 	getAll,
 	// getById,
-	// create,
+	create,
 	// update,
 	// remove,
 	// addItem,

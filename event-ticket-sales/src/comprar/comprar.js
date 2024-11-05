@@ -1,80 +1,109 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import QRCode from "qrcode";
 import "./comprar.css";
 
-const productos = [
-  { id: 1, title: "Q'Lokura - 24 de Octubre", price: 9000, description: "Descripción del evento Q'Lokura.", pictures: [{ url: require("../img/1.jpg") }] },
-  { id: 2, title: "Q'Lokura - 25 de Octubre", price: 9000, description: "Descripción del evento Q'Lokura.", pictures: [{ url: require("../img/2.jpg") }] },
-  { id: 3, title: "Q'Lokura - 26 de Octubre", price: 9000, description: "Descripción del evento Q'Lokura.", pictures: [{ url: require("../img/1.jpg") }] },
-];
-
 const Comprar = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const producto = productos.find((prod) => prod.id === parseInt(id));
-
   const [cantidad, setCantidad] = useState(1);
   const [entradas, setEntradas] = useState([{ nombre: "", apellido: "", dni: "" }]); 
   const [qrValues, setQrValues] = useState([]); 
+  const [event, setEvent] = useState([]); 
   const [compraRealizada, setCompraRealizada] = useState(false);
 
-  if (!producto) {
-    return <p>No se encontró el producto.</p>;
-  }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  const { title, price, pictures } = producto;
+    if (!token) {
+      navigate("/login");
+      return;
+    }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    const verifyToken = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/verify-token", {
+          headers: {
+            Authorization: token, 
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Token invalid or expired");
+        }
+      } catch (error) {
+        console.error(error);
+        localStorage.removeItem("token"); 
+        navigate("/login");
+      }
+    };
 
-    const ticketInfoList = entradas.map((entrada, index) => {
-      return `Compra de entrada #${index + 1} para ${title} - Nombre: ${entrada.nombre}, Apellido: ${entrada.apellido}, DNI: ${entrada.dni}`;
-    });
+    verifyToken();
+  }, [navigate]);
+    const fetchEvento = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/events/${id}`
+        );
+        if (!response.ok) {
+          throw new Error("Error al obtener las imágenes");
+        }
+        const data = await response.json();
+        setEvent(data);
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+      }
+    };
 
-    setQrValues(ticketInfoList); // Almacena los valores de los QR
+    useEffect(() => {
+      fetchEvento();
+    }, []);
 
-    // Guardar en localStorage
-    const compras = JSON.parse(localStorage.getItem('compras')) || [];
-    ticketInfoList.forEach((ticketInfo, index) => {
-      compras.push({
-        title,
-        cantidad: 1, // Cada entrada se cuenta por separado
-        nombre: entradas[index].nombre,
-        apellido: entradas[index].apellido,
-        dni: entradas[index].dni,
-        qrValue: ticketInfo, // Guarda el valor del QR para cada entrada
-      });
-    });
-    localStorage.setItem('compras', JSON.stringify(compras));
+      if (!event) {
+        return <p>No se encontró el evento.</p>;
+      }
 
-    alert("Compra realizada con éxito!"); // Mensaje de éxito
-    setCompraRealizada(true);
-  };
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        try {
+          const token = localStorage.getItem("token");
+          const response = await fetch('http://localhost:8080/api/tickets', {
+              method: 'POST', // Specify POST method
+              headers: {
+                  'Content-Type': 'application/json', // Set JSON content type
+                  'Authorization': `Bearer ${token}`, // Agrega el token aquí
+              },
+              body: JSON.stringify({ 
+                tickets: entradas, 
+                eventId: event.id
+            }),
+          });
+  
+          if (!response.ok) {
+              throw new Error('Error al crear el evento');
+          }else{
+            window.location.href = '/mis-compras'
+          }
+  
+          
+          // Optionally, update your state or redirect after successful creation
+      } catch (error) {
+          console.error('Error:', error);
+      }
 
-  const downloadQRs = () => {
-    qrValues.forEach((qrValue, index) => {
-      const canvas = document.createElement('canvas');
-      const link = document.createElement('a');
+        alert("Compra realizada con éxito!"); // Mensaje de éxito
+        setCompraRealizada(true);
+      };
 
-      QRCode.toCanvas(canvas, qrValue, { width: 256 }, (error) => {
-        if (error) console.error(error);
 
-        const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-        link.href = pngUrl;
-        link.download = `ticket_${index + 1}.png`; // Nombre del archivo para cada entrada
-        link.click();
-      });
-    });
-  };
-
-  const handleChange = (index, field, value) => {
-    const newEntradas = [...entradas];
-    newEntradas[index][field] = value;
-    setEntradas(newEntradas);
-  };
+      const handleChange = (index, field, value) => {
+        const newEntradas = [...entradas];
+        newEntradas[index][field] = value;
+        setEntradas(newEntradas);
+      };
 
   const handleCantidadChange = (e) => {
     const newCantidad = parseInt(e.target.value);
@@ -92,16 +121,21 @@ const Comprar = () => {
     <div className="container mt-4 py-5">
       <div className="bg-light p-4 rounded d-flex flex-column flex-md-row">
         <div className="col-md-4 mb-4 mb-md-0">
+        {event?.id ? (
           <img
             className="producto-imagen img-fluid max-height-400"
-            src={pictures[0].url}
-            alt={title}
+            src={require(`../img/events/${event.id}.jpg`)}
+            alt={event.name}
           />
+        ) : (
+          <p>Cargando imagen...</p>
+        )}
+        <p className="mt-3">{event.description}</p>
         </div>
         <div className="col-md-8 ms-md-4">
-          <h2 className="text-center mb-4">{title}</h2>
+          <h2 className="text-center mb-4">{event.name}</h2>
           <div className="detalles mb-4">
-            <p className="h5">Precio: ${price}</p>
+            <p className="h5">Precio: ${event.price}</p>
 
             <div className="mb-3">
               <label htmlFor="cantidad" className="form-label">
@@ -167,11 +201,6 @@ const Comprar = () => {
                 <button className="btn btn-secondary me-3" type="submit">
                   Finalizar Compra
                 </button>
-                {compraRealizada && ( 
-                  <button className="btn btn-secondary" type="button" onClick={downloadQRs}>
-                    Descargar Todos los QR
-                  </button>
-                  )}
               </div>
             </form>
           </div>

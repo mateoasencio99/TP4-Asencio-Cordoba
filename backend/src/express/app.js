@@ -14,6 +14,7 @@ const routes = {
     locations: require('./routes/location'),
     categories: require('./routes/category'),
     users: require('./routes/user'),
+    tickets: require('./routes/ticket'),
 };
 
 const app = express();
@@ -58,6 +59,22 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+app.get("/api/verify-token", (req, res) => {
+    const token = req.headers["authorization"];
+  
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+  
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ message: err });
+      }
+      // Token válido
+      res.status(200).json({ message: "Token valid", user: decoded });
+    });
+  });
+
 // Definición de las rutas de la API
 for (const [routeName, routeController] of Object.entries(routes)) {
     if (routeController.getAll) {
@@ -97,6 +114,11 @@ for (const [routeName, routeController] of Object.entries(routes)) {
 
 app.get(`/api/upcomingEvents`,
     makeHandlerAwareOfAsyncErrors(routes.events.upcomingEvents)
+);
+
+app.get(`/api/userTickets`,
+    authenticateToken,
+    makeHandlerAwareOfAsyncErrors(routes.tickets.getAll)
 );
 
 module.exports = app;

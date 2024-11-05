@@ -17,7 +17,6 @@ const modelDefiners = [
 	require('./models/country.model'),
 	require('./models/event.model'),
 	require('./models/location.model'),
-	require('./models/person.model'),
 	require('./models/province.model'),
 	require('./models/ticket.model'),
 	require('./models/user.model'),

@@ -1,11 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Nav = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const [configurations, setConfigurations] = useState([]);
 
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8080/api/configurations"
+        );
+        if (!response.ok) {
+          throw new Error("Error al obtener los eventos");
+        }
+        const data = await response.json();
+        setConfigurations(data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  const token = localStorage.getItem('token');
   const logout = () => {
     localStorage.removeItem('token');
     navigate('/login');
@@ -14,12 +34,15 @@ const Nav = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-dark">
       <div className="container">
-        <Link className="navbar-brand text-white fs-4 fw-bold" to="/">Inicio</Link>
+        <Link className="navbar-brand text-white fs-4 fw-bold" to="/">{configurations.name}</Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto ">
+          <li className="nav-item">
+              <Link className="nav-link text-white" to="/">Inicio</Link>
+            </li>
             <li className="nav-item">
               <Link className="nav-link text-white" to="/eventos">Eventos</Link>
             </li>

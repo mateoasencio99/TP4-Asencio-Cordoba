@@ -3,14 +3,25 @@ const { models } = require('../../sequelize');
 const { getIdParam } = require('../helpers');
 
 async function getAll(req, res) {
-	const userId = req.userId; 
-	const events = await models.event.findAll({order: [['date', 'DESC']]});
+	const events = await models.event.findAll(
+		{
+			include: [{
+				model: models.location,
+				attributes: ['name'] 
+			}],
+			order: [['date', 'DESC']]
+		});
 	res.status(200).json(events);
 };
 
 async function getById(req, res) {
 	const id = getIdParam(req);
-	const event = await models.event.findByPk(id);
+	const event = await models.event.findByPk(id, {
+	include: [{
+			model: models.location, 
+			attributes: ['name'] 
+		}],
+	});
 	if (event) {
 		res.status(200).json(event);
 	} else {
