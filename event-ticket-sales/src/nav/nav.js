@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useSalesContext } from "../salesContext/salesContext";
 
 const Nav = () => {
   const navigate = useNavigate();
   const [configurations, setConfigurations] = useState([]);
+  const {  setCurrentEventId, currentEventId, setCurrentTickets } = useSalesContext();
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -27,6 +29,8 @@ const Nav = () => {
 
   const token = localStorage.getItem('token');
   const logout = () => {
+    setCurrentEventId(0);
+    setCurrentTickets([{ nombre: "", apellido: "", dni: "" }]);
     localStorage.removeItem('token');
     navigate('/login');
   };
@@ -49,6 +53,11 @@ const Nav = () => {
             {token && (
               <li className="nav-item">
                 <Link className="nav-link text-white" to="/mis-compras">Mis Compras</Link>
+              </li>
+            )}
+            {token && currentEventId > 0 && (
+              <li className="nav-item">
+                <Link className="nav-link text-white" to={`/comprar/${currentEventId}`}>Continuar compra</Link>
               </li>
             )}
             {token ? (

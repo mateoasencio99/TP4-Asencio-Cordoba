@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import QRCode from "qrcode";
+import { useSalesContext } from "../salesContext/salesContext";
 import "./comprar.css";
 
 const Comprar = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const {  setCurrentEventId, currentTickets, setCurrentTickets } = useSalesContext();
 
-  const [cantidad, setCantidad] = useState(1);
-  const [entradas, setEntradas] = useState([{ nombre: "", apellido: "", dni: "" }]); 
-  const [qrValues, setQrValues] = useState([]); 
+  const [cantidad, setCantidad] = useState(currentTickets.length);
+  const [entradas, setEntradas] = useState(currentTickets); 
   const [event, setEvent] = useState([]); 
-  const [compraRealizada, setCompraRealizada] = useState(false);
+
+  setCurrentEventId(id);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -41,6 +42,7 @@ const Comprar = () => {
 
     verifyToken();
   }, [navigate]);
+
     const fetchEvento = async () => {
       try {
         const response = await fetch(
@@ -85,17 +87,16 @@ const Comprar = () => {
           if (!response.ok) {
               throw new Error('Error al crear el evento');
           }else{
+            setCurrentEventId(0);
+            setCurrentTickets([{ nombre: "", apellido: "", dni: "" }]);
             window.location.href = '/mis-compras'
           }
   
           
-          // Optionally, update your state or redirect after successful creation
       } catch (error) {
           console.error('Error:', error);
       }
-
-        alert("Compra realizada con éxito!"); // Mensaje de éxito
-        setCompraRealizada(true);
+        alert("Compra realizada con éxito!"); 
       };
 
 
@@ -109,12 +110,12 @@ const Comprar = () => {
     const newCantidad = parseInt(e.target.value);
     setCantidad(newCantidad);
     
-    // Asegurarse de que el estado de entradas tenga la misma cantidad de objetos
     const newEntradas = [];
     for (let i = 0; i < newCantidad; i++) {
       newEntradas.push(entradas[i] || { nombre: "", apellido: "", dni: "" });
     }
     setEntradas(newEntradas);
+    setCurrentTickets(newEntradas);
   };
 
   return (

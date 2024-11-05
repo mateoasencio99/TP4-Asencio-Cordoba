@@ -11,26 +11,29 @@ import Comprar from "./comprar/comprar";
 import Login from "./login/login";
 import Register from "./register/register"; 
 import MisCompras from "./misCompras/misCompras";
+import { Provider } from "./salesContext/salesContext"
 
 function App() {
   return (
-    <Router>
-      <div>
-        <Nav />
-        <Routes>
-          <Route path="/" element={<Principal />} />
-          <Route path="/eventos" element={<Eventos />} />
-          <Route path="/detalles/:id" element={<Detalles />} />
-          <Route path="/comprar/:id" element={<Comprar />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/registro" element={<Register />} />
-          {/* Ruta para redirigir a la página principal si no se encuentra la ruta */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-          <Route path="/mis-compras" element={<MisCompras />} />
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+    <Provider>
+      <Router>
+        <div>
+          <Nav />
+          <Routes>
+            <Route path="/" element={<Principal />} />
+            <Route path="/eventos" element={<Eventos />} />
+            <Route path="/detalles/:id" element={<Detalles />} />
+            <Route path="/comprar/:id" element={<Comprar />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Register />} />
+            {/* Ruta para redirigir a la página principal si no se encuentra la ruta */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/mis-compras" element={<MisCompras />} />
+          </Routes>
+          <Footer />
+        </div>
+      </Router>
+    </Provider>
   );
 }
 
